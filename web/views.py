@@ -1,6 +1,8 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404,redirect
 
 from .models import Categoria,Producto
+
+from .carryto import Cart
 # Create your views here.
 """ VISTAS PARA EL CATALOGO DE PRODUCTOS"""
 
@@ -50,5 +52,55 @@ def productodetalle(request,producto_id):
     return render(request,"producto.html",context)
 
    
-  
+"""  vistas para el carrito de compras """
 
+def carrito(request):
+    return render(request,"carrito.html")
+
+
+
+def agregarcarrito(request,producto_id):
+    if request.method=='POST':
+        cantidad=int(request.POST['cantidad'])
+
+    else:
+        cantidad=1
+
+
+    objproducto=Producto.objects.get(pk=producto_id)
+    carritoproducto = Cart(request)
+    carritoproducto.add(objproducto,cantidad)
+    
+
+    return render(request,"carrito.html")
+
+def eliminarproducto(request,producto_id):
+    objproducto=Producto.objects.get(pk=producto_id)
+    carritoproducto=Cart(request)
+    carritoproducto.delete(objproducto)
+
+    return render(request,"carrito.html")
+    
+
+def limpiarcarrito(request):
+
+    carritoproducto=Cart(request)
+    carritoproducto.clear()
+
+    return render(request,"carrito.html")
+       
+
+def agregarcarrito_(request,producto_id):
+    if request.method=='POST':
+        cantidad=int(request.POST['cantidad'])
+
+    else:
+        cantidad=1
+
+
+    objproducto=Producto.objects.get(pk=producto_id)
+    carritoproducto = Cart(request)
+    carritoproducto.add(objproducto,cantidad)
+    
+
+    return redirect("/")
