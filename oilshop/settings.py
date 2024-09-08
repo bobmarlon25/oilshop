@@ -83,12 +83,12 @@ WSGI_APPLICATION = 'oilshop.wsgi.application'
 # }
 DATABASES = {
     'default': {
-        'ENGINE':'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dboil',
-        'USER': 'postgres',
-        'PASSWORD': 'mjpp3142159888',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'olishop',
+        'USER': 'root',
+        'PASSWORD':'Mjpp3142159888',
         'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'PORT': '3306',
     }
 }
 
