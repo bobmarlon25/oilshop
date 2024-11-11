@@ -4,3 +4,5 @@ pillow
 
 mysqlclient
 django-admin-tailwind
+setuptools     
+psycopg2-binary
