@@ -5,7 +5,7 @@
             <ul class="section-sb-list">
                 {% for categoria in categorias %}
                 <li>
-                    <a href="{% url 'web:productosporcategorias' categoria.id %}">
+                    <a href="{% url 'web:productosporcategorias' vehiculo.id %}">
                         <span class="section-sb-label">{{categoria.nombre}}
                             <span class="count">{{categoria.producto_set.all.count}}</span>
                         </span>
@@ -22,7 +22,7 @@
             <ul class="section-sb-list">
                 {% for categoria in categorias %}
                 <li>
-                    <a href="{% url 'web:productosporcategorias' categoria.id %}">
+                    <a href="{% url 'web:productosporcategorias' vehiculo.id %}">
                         <span class="section-sb-label">{{categoria.nombre}}
                             <span class="count">{{categoria.producto_set.all.count}}</span>
                         </span>

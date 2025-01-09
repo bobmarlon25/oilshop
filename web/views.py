@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404,redirect
 
-from .models import Categoria,Producto
+from .models import vehiculo,Producto
 
 from .carryto import Cart
 # Create your views here.
@@ -8,7 +8,7 @@ from .carryto import Cart
 
 def index(request):
     listaproductos = Producto.objects.all()    
-    listacategorias = Categoria.objects.all()   
+    listacategorias = vehiculo.objects.all()   
     contex = {
         'productos':listaproductos,
         'categorias':listacategorias
@@ -18,9 +18,9 @@ def index(request):
 
 def productosporcategorias(request,categoria_id):
     """vista para filtrar productos por categoria """
-    objcategoria =Categoria.objects.get(pk=categoria_id)
+    objcategoria =vehiculo.objects.get(pk=categoria_id)
     listaproductos=objcategoria.producto_set.all()
-    listacategorias = Categoria.objects.all()  
+    listacategorias = vehiculo.objects.all()  
     context={
         'productos':listaproductos,
         'categorias':listacategorias
@@ -31,7 +31,7 @@ def productosporcategorias(request,categoria_id):
 def productospornombre(request):
     nombre=request.POST['nombre']
     listaproductos=Producto.objects.filter(nombre__contains=nombre)
-    listacategorias = Categoria.objects.all()  
+    listacategorias = vehiculo.objects.all()  
 
     context={
         'productos':listaproductos,
