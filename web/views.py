@@ -16,91 +16,91 @@ def index(request):
     return render(request,"index.html",contex)
 
 
-def productosporcategorias(request,categoria_id):
-    """vista para filtrar productos por categoria """
-    objcategoria =vehiculo.objects.get(pk=categoria_id)
-    listaproductos=objcategoria.producto_set.all()
-    listacategorias = vehiculo.objects.all()  
-    context={
-        'productos':listaproductos,
-        'categorias':listacategorias
+# def productosporcategorias(request,categoria_id):
+#     """vista para filtrar productos por categoria """
+#     objcategoria =vehiculo.objects.get(pk=categoria_id)
+#     listaproductos=objcategoria.producto_set.all()
+#     listacategorias = vehiculo.objects.all()  
+#     context={
+#         'productos':listaproductos,
+#         'categorias':listacategorias
 
-    }
-    return render(request,"index.html",context)
+#     }
+#     return render(request,"index.html",context)
 
-def productospornombre(request):
-    nombre=request.POST['nombre']
-    listaproductos=Producto.objects.filter(nombre__contains=nombre)
-    listacategorias = vehiculo.objects.all()  
+# def productospornombre(request):
+#     nombre=request.POST['nombre']
+#     listaproductos=Producto.objects.filter(nombre__contains=nombre)
+#     listacategorias = vehiculo.objects.all()  
 
-    context={
-        'productos':listaproductos,
-        'categorias':listacategorias
+#     context={
+#         'productos':listaproductos,
+#         'categorias':listacategorias
 
-    }
-    return render(request,"index.html",context)
+#     }
+#     return render(request,"index.html",context)
 
 
 
-def productodetalle(request,producto_id):
-    # listaproducto=Producto.objects.get(pk=producto_id)
-    listaproducto=get_object_or_404(Producto,pk=producto_id)
-    context={
-        'producto':listaproducto
+# def productodetalle(request,producto_id):
+#     # listaproducto=Producto.objects.get(pk=producto_id)
+#     listaproducto=get_object_or_404(Producto,pk=producto_id)
+#     context={
+#         'producto':listaproducto
     
-    }
-    return render(request,"producto.html",context)
+#     }
+#     return render(request,"producto.html",context)
 
    
-"""  vistas para el carrito de compras """
+# """  vistas para el carrito de compras """
 
-def carrito(request):
-    return render(request,"carrito.html")
-
-
-
-def agregarcarrito(request,producto_id):
-    if request.method=='POST':
-        cantidad=int(request.POST['cantidad'])
-
-    else:
-        cantidad=1
+# def carrito(request):
+#     return render(request,"carrito.html")
 
 
-    objproducto=Producto.objects.get(pk=producto_id)
-    carritoproducto = Cart(request)
-    carritoproducto.add(objproducto,cantidad)
+
+# def agregarcarrito(request,producto_id):
+#     if request.method=='POST':
+#         cantidad=int(request.POST['cantidad'])
+
+#     else:
+#         cantidad=1
+
+
+#     objproducto=Producto.objects.get(pk=producto_id)
+#     carritoproducto = Cart(request)
+#     carritoproducto.add(objproducto,cantidad)
     
 
-    return render(request,"carrito.html")
+#     return render(request,"carrito.html")
 
-def eliminarproducto(request,producto_id):
-    objproducto=Producto.objects.get(pk=producto_id)
-    carritoproducto=Cart(request)
-    carritoproducto.delete(objproducto)
+# def eliminarproducto(request,producto_id):
+#     objproducto=Producto.objects.get(pk=producto_id)
+#     carritoproducto=Cart(request)
+#     carritoproducto.delete(objproducto)
 
-    return render(request,"carrito.html")
+#     return render(request,"carrito.html")
     
 
-def limpiarcarrito(request):
+# def limpiarcarrito(request):
 
-    carritoproducto=Cart(request)
-    carritoproducto.clear()
+#     carritoproducto=Cart(request)
+#     carritoproducto.clear()
 
-    return render(request,"carrito.html")
+#     return render(request,"carrito.html")
        
 
-def agregarcarrito_(request,producto_id):
-    if request.method=='POST':
-        cantidad=int(request.POST['cantidad'])
+# def agregarcarrito_(request,producto_id):
+#     if request.method=='POST':
+#         cantidad=int(request.POST['cantidad'])
 
-    else:
-        cantidad=1
+#     else:
+#         cantidad=1
 
 
-    objproducto=Producto.objects.get(pk=producto_id)
-    carritoproducto = Cart(request)
-    carritoproducto.add(objproducto,cantidad)
+#     objproducto=Producto.objects.get(pk=producto_id)
+#     carritoproducto = Cart(request)
+#     carritoproducto.add(objproducto,cantidad)
     
 
-    return redirect("/")
+#     return redirect("/")
