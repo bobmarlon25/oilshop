@@ -865,7 +865,7 @@ body i.icon {
 	border: none;
 	transition: all 0.2s;
 }
-/* Mega Menu Current Item */
+/* Mega Menu Current Item 
 .site-header .cmm-container > ul.cmm li > a.current_page_parent,
 .site-header .cmm-container > ul.cmm li > a.current-menu-parent,
 .site-header .cmm-container > ul.cmm li > a.current-menu-ancestor,
@@ -873,7 +873,7 @@ body i.icon {
 .site-header .cmm-container > ul.cmm li > a.current_page_item {
 	color: #1291ee !important;
 }
-/* Mega Menu Current Item */
+ Mega Menu Current Item */
 
 
 .topbar {
@@ -11752,8 +11752,4 @@ Compare List
 /*----------------------------------
 28 - Footer
 ----------------------------------*/
-
-
-
-
 

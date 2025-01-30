@@ -8,11 +8,14 @@
     No Space
     --><div class="h-shop">
 
-        <form method="post" action="{% url 'web:productosPorNombre' %}" class="h-search" id="h-search">
+        <form method="post" action="{% url 'web:productospornombre' %}" class="h-search" id="h-search">
             {% csrf_token %}
-            <input type="text" name="nombre" placeholder="Buscar...">
+            <input type="text" name="nombre" value="{{ nombre}}" placeholder="Buscar...">
             <button type="submit"><i class="ion-search"></i></button>
-        </form>
+        </form>  
+
+
+
 
         <ul class="h-shop-links">
             <li class="h-search-btn" id="h-search-btn"><i class="ion-search"></i></li>
@@ -32,3 +35,6 @@
 
         </ul>
     </div></div>
+
+
+    

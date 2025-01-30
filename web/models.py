@@ -31,6 +31,8 @@ class referencia (models.Model):
 
     def __str__(self):
         return self.nombre
+    
+    
 #( sintetico, valvulina ) 
 class tipo (models.Model):
     nombre =models.CharField(max_length=200)
@@ -50,8 +52,6 @@ class Producto(models.Model):
     precio=models.DecimalField(max_digits=9,decimal_places=2)
     fecha_registro=models.DateTimeField(auto_now_add=True)
     imagen=models.ImageField(upload_to='productos',blank=True)
-    combustible=models.TextField(null=True)
-    referencia =models.TextField(null=True)
-
+    
     def __str__(self):
         return self.nombre
