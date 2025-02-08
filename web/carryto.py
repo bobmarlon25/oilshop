@@ -1,7 +1,8 @@
 class Cart():
     def __init__(self, request):
-        self.request=request
-        self.session=request.session
+        self.request=request  # para crear un tipo requesd 
+        self.session=request.session # obtiene la seccion del navegador 
+        
 
         cart=self.session.get("cart")
         monto=self.session.get("montototal")
@@ -13,17 +14,18 @@ class Cart():
         self.monto=float(monto)
 
     def add(self,producto,cantidad):
-        if str(producto.id) not in self.cart.keys():
+        if str(producto.id) not in self.cart.keys(): # para revisar si ya existe el producto en carrito 
             self.cart[producto.id]={
                 "producto_id":producto.id,
                 "nombre":producto.nombre,
                 "cantidad":cantidad,
                 "precio":str(producto.precio),
-                "imagen":producto.imagen.url,
-                "categoria":producto.categoria.nombre,
+                "imagen": producto.imagen.url if producto.imagen else "https://placehold.co/250",
+                "vehiculo":producto.vehiculo.nombre,
                 "subtotal":str(cantidad*producto.precio)
             }
         else:
+            # actualizamos el producto en el carrito 
             for key,value in self.cart.items():
                 if key ==str(producto.id):
                     value["cantidad"]=str(int(value["cantidad"])+ cantidad)
@@ -44,8 +46,7 @@ class Cart():
         self.session["cart"]={}
         self.session["montototal"]="0"
 
-    def save(self):
-        
+    def save(self): 
         """"guarda cambios en el carrito de compras """
         monto=0
         for key,value in self.cart.items():

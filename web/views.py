@@ -3,6 +3,7 @@ from django.shortcuts import render, get_object_or_404,redirect
 from .models import vehiculo,Producto,Marcas,combustible,referencia,tipo
 
 from .carryto import Cart
+
 # Create your views here.
 """ VISTAS PARA EL CATALOGO DE PRODUCTOS"""
 
@@ -182,20 +183,34 @@ def carrito(request):
 
 
 
-def agregarcarrito(request,producto_id):
+def agregarCarrito(request,producto_id):
     if request.method=='POST':
         cantidad=int(request.POST['cantidad'])
-
+        
+        accion = str(request.POST.get('accion'))
+        
+        
+        if accion == 'aumentar':
+            cantidad = 1
+            
+        elif accion == 'disminuir' and cantidad > 1:  # Evitar que la cantidad sea menor que 1
+            cantidad = -1
+            
+        elif accion == 'disminuir' and cantidad == 1:  # Evitar que la cantidad sea menor que 1
+            cantidad = 0
+            
     else:
         cantidad=1
+
 
 
     objproducto=Producto.objects.get(pk=producto_id)
     carritoproducto = Cart(request)
     carritoproducto.add(objproducto,cantidad)
-    
-
-    return render(request,"carrito.html")
+    if request.method=='GET':
+        return redirect("/")
+    else:
+        return render(request,"carrito.html")
 
 def eliminarproducto(request,producto_id):
     objproducto=Producto.objects.get(pk=producto_id)
@@ -213,17 +228,19 @@ def limpiarcarrito(request):
     return render(request,"carrito.html")
        
 
-def agregarcarrito_(request,producto_id):
-    if request.method=='POST':
-        cantidad=int(request.POST['cantidad'])
+# def agregarcarrito_(request,producto_id):
+#     if request.method=='POST':
+#         cantidad=int(request.POST['cantidad'])
 
-    else:
-        cantidad=1
+#     else:
+#         cantidad=1
 
 
-    objproducto=Producto.objects.get(pk=producto_id)
-    carritoproducto = Cart(request)
-    carritoproducto.add(objproducto,cantidad)
+#     objproducto=Producto.objects.get(pk=producto_id)
+#     carritoproducto = Cart(request)
+#     carritoproducto.add(objproducto,cantidad)
     
 
-    return redirect("/")
+#     return redirect("/")
+
+    
