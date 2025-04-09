@@ -11,9 +11,9 @@
             <div class="auth-wrap">
                 <div class="auth-col">
                     <h2>Datos Personales</h2>
-                    <form method="post" action="{% url 'web:actualizarCliente' %}" class="register">
+                    <form method="post" action="{% url 'web:actualizarcliente' %}" class="register">
                         {% csrf_token %}
-                        {{frmCliente}}
+                        {{frmcliente}}
                         <p class="auth-submit">
                             <input type="submit" value="Actualizar Datos">
                         </p>

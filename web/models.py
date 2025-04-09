@@ -1,4 +1,6 @@
-from django.db import models
+from django.db import models 
+import uuid
+from django.contrib.auth.models import User 
 
 #(carro ,moto )
 class vehiculo (models.Model):
@@ -55,3 +57,45 @@ class Producto(models.Model):
     
     def __str__(self):
         return self.nombre
+    
+
+class Cliente(models.Model):
+    usuario=models.OneToOneField(User,on_delete=models.RESTRICT)
+    cc=models.CharField(max_length=10)
+    sexo=models.CharField(max_length=1,default='m')
+    telefono= models.CharField(max_length=15)
+    fecha_nacimiento= models.DateField(null=True)
+    direcion=models.TextField()
+
+    def __srt__(self):
+        return self.cc
+    
+
+class Pedido(models.Model):
+    ESTADO_CHOICES=(
+        ('0','SOLICITADO'),
+        ('1','PAGADO')
+    )
+    cliente=models.ForeignKey(Cliente,on_delete=models.RESTRICT)
+    fecha_registro=models.DateTimeField(auto_now_add=True)
+    nro_pedido=models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    monto_total=models.DecimalField(max_digits=10,decimal_places=2,default=0)
+    estado=models.CharField(max_length=1,default=0,choices=ESTADO_CHOICES)
+
+
+    def __srt__(self):
+        return self.nro_pedido
+    
+
+class PedidoDetalle(models.Model):
+    pedido = models.ForeignKey(Pedido, on_delete=models.RESTRICT)
+    producto = models.ForeignKey(Producto, on_delete=models.RESTRICT)
+    cantidad = models.IntegerField(default=1)
+    subtotal = models.DecimalField(max_digits=10, decimal_places=2)
+    
+    def __str__(self):
+        return self.producto.nombre
+
+
+
+
