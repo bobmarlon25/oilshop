@@ -2365,7 +2365,7 @@ body .widget_search .dgwt-wcas-si img {
 	background-position: center center;
 	-webkit-background-size: cover;
 	background-size: cover;
-	background-image: url(../img/1/front/hero2.jpg);
+	/* background-image: url(../img/1/front/hero2.jpg); */
 }
 .heroblock2 .heroblock2-ttl {
 	line-height: 1.2;
