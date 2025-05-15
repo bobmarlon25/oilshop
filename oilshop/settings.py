@@ -37,7 +37,7 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'web',
     'paypal.standard.ipn',
-    'django_admin_tailwind',
+   
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
