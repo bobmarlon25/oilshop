@@ -10,3 +10,4 @@ django-paypal
 cloudinary
 python-decouple
 gunicorn
+whitenoise
