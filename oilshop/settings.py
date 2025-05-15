@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import  os
 
 from pathlib import Path
+import cloudinary
+
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -74,23 +77,14 @@ TEMPLATES = [
 WSGI_APPLICATION = 'oilshop.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 DATABASES = {
     'default': {
         'ENGINE':'django.db.backends.postgresql_psycopg2',
-        'NAME': 'olishop',
-        'USER': 'postgres',
-        'PASSWORD': 'Mjpp3142159888',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'NAME': config('POSTGRESQL_ADDON_DB'),
+        'USER': config('POSTGRESQL_ADDON_USER'),
+        'PASSWORD': config('POSTGRESQL_ADDON_PASSWORD'),
+        'HOST': config('POSTGRESQL_ADDON_HOST'),
+        'PORT': config('POSTGRESQL_ADDON_PORT'),
     }
 }
 
@@ -144,10 +138,16 @@ MEDIA_URL='/media/'
 
 PAYPAL_TEST = True
 
+cloudinary.config(
+    cloud_name=config('CLOUD_NAME'),
+    api_key=config('API_KEY'),
+    api_secret=config('API_SECRET')
+)
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # Looking to send emails in production? Check out our Email API/SMTP product!
 # Looking to send emails in production? Check out our Email API/SMTP product!
-EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
-EMAIL_HOST_USER = '27492a4f367292'
-EMAIL_HOST_PASSWORD = '43dc32bdf38124'
-EMAIL_PORT = '2525'
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = config('EMAIL_PORT', cast=int)

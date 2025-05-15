@@ -7,3 +7,5 @@ django-admin-tailwind
 setuptools     
 psycopg2-binary
 django-paypal
+cloudinary
+python-decouple
