@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'web',
+    'paypal.standard.ipn',
     'django_admin_tailwind',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -140,3 +141,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_ROOT=os.path.join(BASE_DIR,'media')
 MEDIA_URL='/media/'
+
+PAYPAL_TEST = True
+
+
+# Looking to send emails in production? Check out our Email API/SMTP product!
+# Looking to send emails in production? Check out our Email API/SMTP product!
+EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
+EMAIL_HOST_USER = '27492a4f367292'
+EMAIL_HOST_PASSWORD = '43dc32bdf38124'
+EMAIL_PORT = '2525'

@@ -65,7 +65,7 @@ class Cliente(models.Model):
     sexo=models.CharField(max_length=1,default='m')
     telefono= models.CharField(max_length=15)
     fecha_nacimiento= models.DateField(null=True)
-    direcion=models.TextField()
+    direccion=models.TextField()
 
     def __srt__(self):
         return self.cc
@@ -78,7 +78,7 @@ class Pedido(models.Model):
     )
     cliente=models.ForeignKey(Cliente,on_delete=models.RESTRICT)
     fecha_registro=models.DateTimeField(auto_now_add=True)
-    nro_pedido=models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    nro_pedido = models.CharField(max_length=20, blank=True, null=True, unique=True)
     monto_total=models.DecimalField(max_digits=10,decimal_places=2,default=0)
     estado=models.CharField(max_length=1,default=0,choices=ESTADO_CHOICES)
 

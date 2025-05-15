@@ -6,3 +6,4 @@ mysqlclient
 django-admin-tailwind
 setuptools     
 psycopg2-binary
+django-paypal

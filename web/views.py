@@ -5,8 +5,9 @@ from .models import vehiculo,Producto,Marcas,combustible,referencia,tipo,Cliente
 from .carryto import Cart
 from django.contrib.auth.models import User
 from django.contrib.auth import login,logout,authenticate
-
+from django.contrib.auth.decorators import login_required
 # Create your views here.
+
 """ VISTAS PARA EL CATALOGO DE PRODUCTOS"""
 
 def index(request):
@@ -238,12 +239,23 @@ def CrearUsuario(request):
         datausuario=request.POST['nuevousuario']
         datapasword=request.POST['nuevopassword']
 
-        nuevoUsuario=User.objects.create_user(username=datausuario,password=datapasword)
+        
 
-        if nuevoUsuario is not None:
-            login(request,nuevoUsuario)
+        try : 
+            validar=User.objects.get(username=datausuario)
+            return render(request,'login.html',context={
+                'user':validar.username,
+                'mensaje':'usuario ya esta creado'
+                })
+            
+             
 
-            return redirect('/cuenta')
+        except User.DoesNotExist:
+            nuevoUsuario=User.objects.create_user(username=datausuario,password=datapasword)
+            if nuevoUsuario is not None:
+                login(request,nuevoUsuario)
+
+                return redirect('/cuenta')
 
         
     
@@ -254,12 +266,84 @@ def CrearUsuario(request):
     
 
 def CuentaUsuario(request):
+    if request.user.is_authenticated:
+        try:
+            cuenta_editar=Cliente.objects.get(usuario=request.user)
+            datacliente={
+                'nombre':request.user.first_name,
+                'apellidos':request.user.last_name,
+                'email':request.user.email,
+                'direccion':cuenta_editar.direccion,
+                'telefono':cuenta_editar.telefono,
+                'cc':cuenta_editar.cc,
+                'sexo':cuenta_editar.sexo,
+                'fecha_nacimiento':cuenta_editar.fecha_nacimiento
+                }
+        except :
+            datacliente={
+                'nombre':request.user.first_name,
+                'apellidos':request.user.last_name,
+                'email':request.user.email,}
+           
+    else:
+        return redirect('/login')
     
-    frmCliente=ClienteForm()
+
+    
+    frmCliente=ClienteForm(datacliente)
     context={
-        'frmcliente':frmCliente
-    }
+            'frmcliente':frmCliente
+        }
     return render(request,'cuenta.html',context)
+
+
+
+def loginUsuario (request):
+    paginadestino= request.GET.get('next',None)
+
+    context={
+        'destino':paginadestino,
+        'user':'',
+        'mensaje':''}
+    
+    
+    
+    if request.method== 'POST':
+        datausuario=request.POST['usuario']
+        datapasword=request.POST['password']
+        paginadestino=request.POST['destino']
+        print(paginadestino)
+        
+       
+        usuarioAuth=authenticate(request,username=datausuario,password=datapasword)
+        if usuarioAuth is not  None:
+            login(request, usuarioAuth)
+
+            if paginadestino != 'None':
+                return redirect(paginadestino)
+            
+            try:
+                cuenta=Cliente.objects.get(usuario=request.user)
+                login(request,usuarioAuth)
+                return redirect('/cuenta')             
+            except Cliente.DoesNotExist:
+                return redirect('/cuenta')    
+                
+        
+
+        else :
+            context={'mensajeError':'usuario o contraseña incorrecta',
+                     'user':'',
+                     'mensaje':''}
+    
+        
+    
+    return render(request,'login.html',context)
+                  
+
+def logoutUsuario(request):
+    logout(request)
+    return render(request,'login.html')
 
 
 
@@ -268,6 +352,7 @@ def actualizarcliente(request):
 
     if request.method == 'POST':
         frmCliente=ClienteForm(request.POST)
+        mensaje=" informacion no valida "
         if frmCliente.is_valid():
             dataCliente=frmCliente.cleaned_data
 
@@ -280,17 +365,208 @@ def actualizarcliente(request):
             actUsuario.save()
 
 
-            nuevoCliente = Cliente()
+           
+            # Buscar el cliente existente (relacionado al usuario)
+            try:
+                nuevoCliente = Cliente.objects.get(usuario=actUsuario)
+            except Cliente.DoesNotExist:
+                nuevoCliente = Cliente()
+
+
             nuevoCliente.usuario = actUsuario
             nuevoCliente.cc = dataCliente["cc"]
-            nuevoCliente.direcion = dataCliente["direccion"]
+            nuevoCliente.direccion = dataCliente["direccion"]
             nuevoCliente.telefono = dataCliente["telefono"]
             nuevoCliente.sexo = dataCliente["sexo"]
             nuevoCliente.fecha_nacimiento = dataCliente["fecha_nacimiento"]
             nuevoCliente.save()
-            context={
+            
+            mensaje=" correctamente se guardo"
+            
+            
+    context={
 
-            'mensaje':" correctamente se guardo",
-            'frmcliente':frmCliente}
+    'mensaje':mensaje,
+    'frmcliente':frmCliente}
 
     return  render(request,'cuenta.html',context)
+
+##vistas para proceso de commpras ##
+@login_required(login_url='/login')
+
+def registrarPedido(request):
+
+   
+    try:
+        cuenta_editar=Cliente.objects.get(usuario=request.user)
+        datacliente={
+            'nombre':request.user.first_name,
+            'apellidos':request.user.last_name,
+            'email':request.user.email,
+            'direccion':cuenta_editar.direccion,
+            'telefono':cuenta_editar.telefono,
+            'cc':cuenta_editar.cc,
+            'sexo':cuenta_editar.sexo,
+            'fecha_nacimiento':cuenta_editar.fecha_nacimiento
+            }
+        
+    except :
+        datacliente={
+            'nombre':request.user.first_name,
+            'apellidos':request.user.last_name,
+            'email':request.user.email,}
+        frmCliente=ClienteForm(datacliente)
+        
+        context={
+            'frmcliente':frmCliente
+            }
+        return render(request,'cuenta.html',context)
+           
+    
+
+    
+    frmCliente=ClienteForm(datacliente)
+    context={
+        'frmCliente':frmCliente
+    }
+
+    return render(request,'pedido.html',context)
+
+
+from django.urls import reverse
+from paypal.standard.forms import PayPalPaymentsForm
+
+def view_that_asks_for_money(request):
+
+    # What you want the button to do.
+    paypal_dict = {
+        "business": "sb-vtv9839986270@business.example.com",
+        "amount": "1.00",
+        "item_name": "producto prueba ",
+        "invoice": "100-ed100",
+        "notify_url": request.build_absolute_uri('paypal-ipn'),
+        "return": request.build_absolute_uri('/'),  # Asegúrate de tener 'home' en tus urls
+        "cancel_return": request.build_absolute_uri('/logout'),  # Igual con 'logout'
+        "custom": "premium_plan",  # Custom command to correlate to some function later (optional)
+    }
+
+    # Create the instance.
+    form = PayPalPaymentsForm(initial=paypal_dict)
+    context = {"form": form}
+    return render(request, "payment.html", context)
+
+
+
+@login_required(login_url='/login')
+
+def ConfirmarPedido(request):
+    context = {}
+
+    if request.method == "POST":
+        # actualizamos datos de usuario
+        actUsuario = User.objects.get(pk=request.user.id)
+        actUsuario.first_name = request.POST['nombre']
+        actUsuario.last_name = request.POST['apellidos']
+        actUsuario.save()
+        
+        # registramos o actualizamos cliente
+        try:
+            clientePedido = Cliente.objects.get(usuario=request.user)
+            clientePedido.telefono =request.POST['telefono']
+            clientePedido.direccion=request.POST['direccion']
+            clientePedido.save()
+        except:
+            clientePedido = Cliente()
+            clientePedido.usuario=actUsuario
+            clientePedido.telefono =request.POST['telefono']
+            clientePedido.direccion=request.POST['direccion']
+            clientePedido.save()
+        
+        #registar pedido 
+        nropedido=''
+        montototal=float(request.session.get('montototal'))
+        nuevopedido=Pedido()
+        nuevopedido.cliente=clientePedido
+        nuevopedido.save()
+        
+        #actualizar pedidod 
+        nropedido='PED'+ nuevopedido.fecha_registro.strftime('%Y') + str(nuevopedido.id)
+        nuevopedido.nro_pedido=nropedido
+        nuevopedido.monto_total=montototal
+        nuevopedido.save()
+
+        #registramos el detalle del pedido
+        carritoPedido = request.session.get('cart')
+
+       
+        for key, value in carritoPedido.items():
+            productoPedido = Producto.objects.get(pk=value['producto_id'])
+            detalle = PedidoDetalle()
+            detalle.pedido = nuevopedido
+            detalle.producto = productoPedido
+            detalle.cantidad = int(value['cantidad'])
+            detalle.subtotal = float(value['subtotal'])
+            detalle.save()
+
+        
+       #registar la variable de secion 
+        request.session['pedidoId']=nuevopedido.id
+
+        #creamos el boton de paypal 
+        paypal_dict = {
+        "business": "sb-vtv9839986270@business.example.com",
+        "amount": montototal,
+        "item_name": "codigo de pedido: "+ nropedido,
+        "invoice": nropedido,
+        "notify_url": request.build_absolute_uri('paypal-ipn'),
+        "return": request.build_absolute_uri('/gracias'),  # Asegúrate de tener 'home' en tus urls
+        "cancel_return": request.build_absolute_uri('/logout'),  # Igual con 'logout'
+        
+    }   
+   
+        # Create the instance.
+        formpaypal = PayPalPaymentsForm(initial=paypal_dict)
+
+        
+        context={
+            'pedido':nuevopedido,
+            'formpaypal':formpaypal
+        }
+
+        carrito=Cart(request)
+        carrito.clear
+
+
+
+
+    return render(request,'compra.html',context)
+
+from django.core.mail import send_mail
+
+@login_required(login_url='/login')
+def gracias(request):
+    paypalId = request.GET.get('PayerID', None)
+    context ={}
+    if paypalId is not None:
+        pedidoId = request.session.get('pedidoId')
+        pedido = Pedido.objects.get(pk=pedidoId)
+        pedido.estado = '1'
+        pedido.save()
+        context={
+            'pedido':pedido
+        }
+
+        
+
+        send_mail(
+            "GRACIAS POR TU COMPRA",
+            "TU NUMERO DE PEDIDO ES "+ pedido.nro_pedido,
+            "oilshopabrego@gmail.com",
+            [request.user.email,"julianpuentes25@gmail.com"],
+            fail_silently=False,
+        )
+    else:
+        return redirect('/')
+
+    return render(request, 'gracias.html',context)
+

@@ -93,7 +93,7 @@
         </div>
         <div class="cart-collaterals">
             <a href="{% url 'web:limpiarcarrito' %}" class="checkout-button button">Limpiar Carrito</a>
-            <a href="{ url 'web:registrarPedido' }" class="checkout-button button">Realizar Pedido</a>
+            <a href="{% url 'web:registrarpedido' %}" class="checkout-button button">Realizar Pedido</a>
             <div class="order-total">
                 <p class="cart-totals-ttl">Total</p>
                 <p class="cart-totals-val">${{request.session.montototal}}</p>

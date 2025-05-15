@@ -24,5 +24,11 @@ urlpatterns = [
     path('eliminarproducto/<int:producto_id>',views.eliminarproducto,name='eliminarproducto'),
     path('crearusuario',views.CrearUsuario,name='crearusuario'),
     path('cuenta',views.CuentaUsuario,name='cuenta'),
-    path('actualizarcliente',views.actualizarcliente,name='actualizarcliente')
+    path('actualizarcliente',views.actualizarcliente,name='actualizarcliente'),
+    path('login',views.loginUsuario,name='login'),
+    path('logout',views.logoutUsuario,name='logout'),
+    path('registrarpedido',views.registrarPedido,name='registrarpedido'),
+    path('pruebapaypal',views.view_that_asks_for_money,name='pruebapaypal'),
+    path('confirmarpedido',views.ConfirmarPedido,name='confirmarpedido'),
+    path('gracias',views.gracias,name='gracias')
 ]
