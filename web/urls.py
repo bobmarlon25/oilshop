@@ -9,11 +9,14 @@ app_name='web'
 
 urlpatterns = [
     path('',views.index,name='index'),
-    path('productosporcategorias/<int:categoria_id>',views.productosporcategorias,name='productosporcategorias'),
-    path('productospormarcas/<int:marcas_id>',views.productospormarcas,name='productospormarcas'),
-    path('productosporcombustible/<int:combustible_id>',views.productosporcombustible,name='productosporcombustible'),
-    path('productosporreferencia/<int:referencia_id>',views.productosporreferencia,name='productosporreferencia'),
-    path('productosportipo/<int:tipo_id>',views.productosportipo,name='productosportipo'),
+    # remplazando los siguientes path por una unica funcion
+    # path('productosporcategorias/<int:categoria_id>',views.productosporcategorias,name='productosporcategorias'),
+    # path('productospormarcas/<int:marcas_id>',views.productospormarcas,name='productospormarcas'),
+    # path('productosporcombustible/<int:combustible_id>',views.productosporcombustible,name='productosporcombustible'),
+    # path('productosporreferencia/<int:referencia_id>',views.productosporreferencia,name='productosporreferencia'),
+    # path('productosportipo/<int:tipo_id>',views.productosportipo,name='productosportipo'),
+    path('productos/buscar-por/<slug:termino>/<int:termino_id>',views.filtrar_productos, name='filtrar_productos'),
+
     path('productospornombre',views.productospornombre,name='productospornombre'),
    # path('producto/<int:producto_id>',views.productodetalle, name='producto'),
     path('producto/<int:producto_id>',views.productodetalle, name='producto'),

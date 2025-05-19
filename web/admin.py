@@ -1,11 +1,11 @@
 from django.contrib import admin
-from .models import tipo,Producto,vehiculo,Marcas ,combustible,referencia
+from .models import Tipo, Producto, Vehiculo, Marcas, Combustible, Referencia
 # Register your models here.
-admin.site.register(tipo)
-admin.site.register(referencia)
-admin.site.register(vehiculo)
+admin.site.register(Tipo)
+admin.site.register(Referencia)
+admin.site.register(Vehiculo)
 admin.site.register(Marcas)
-admin.site.register(combustible)
+admin.site.register(Combustible)
 
 
 @admin.register(Producto) # DECORADOR

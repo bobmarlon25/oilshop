@@ -4,7 +4,7 @@
         <ul class="section-sb-list">
             {% for categoria in categorias %}
             <li>
-                <a href="{% url 'web:productosporcategorias' categoria.id %}">
+                <a href="{{ categoria.get_absolute_url }}">
                     <span class="section-sb-label">{{categoria.nombre}} 
                         <span class="count">{{categoria.producto_set.all.count}}</span>
                     </span>
@@ -18,11 +18,11 @@
     <h3 class="widgettitle">Marcas</h3>
     <div class="section-sb-current">
         <ul class="section-sb-list">
-            {% for marcas in marcas %}
+            {% for marca in marcas %}
             <li>
-                <a href="{% url 'web:productospormarcas' marcas.id %}">
-                    <span class="section-sb-label">{{marcas.nombre}} 
-                        <span class="count">{{marcas.producto_set.all.count}}</span>
+                <a href="{{ marca.get_absolute_url }}">
+                    <span class="section-sb-label">{{marca.nombre}} 
+                        <span class="count">{{marca.producto_set.all.count}}</span>
                     </span>
                 </a>
             </li>
@@ -35,9 +35,9 @@
     <h3 class="widgettitle">Combustible</h3>
     <div class="section-sb-current">
         <ul class="section-sb-list">
-            {% for combustible in combustible %}
+            {% for combustible in combustibles %}
             <li>
-                <a href="{% url 'web:productosporcombustible' combustible.id %}">
+                <a href="{{ combustible.get_absolute_url }}">
                     <span class="section-sb-label">{{combustible.nombre}} 
                         <span class="count">{{combustible.producto_set.all.count}}</span>
                     </span>
@@ -52,9 +52,9 @@
     <h3 class="widgettitle">Referencia</h3>
     <div class="section-sb-current">
         <ul class="section-sb-list">
-            {% for referencia in referencia %}
+            {% for referencia in referencias %}
             <li>
-                <a href="{% url 'web:productosporreferencia' referencia.id  %}">
+                <a href="{{ referencia.get_absolute_url }}">
                     <span class="section-sb-label">{{referencia.nombre}} 
                         <span class="count">{{referencia.producto_set.all.count}}</span>
                     </span>
@@ -69,9 +69,9 @@
     <h3 class="widgettitle">Tipo</h3>
     <div class="section-sb-current">
         <ul class="section-sb-list">
-            {% for tipo in tipo %}
+            {% for tipo in tipos %}
             <li>
-                <a href="{% url 'web:productosportipo' tipo.id %}">
+                <a href="{{ tipo.get_absolute_url }}">
                     <span class="section-sb-label">{{tipo.nombre}} 
                         <span class="count">{{tipo.producto_set.all.count}}</span>
                     </span>
