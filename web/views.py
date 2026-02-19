@@ -1,44 +1,77 @@
 from django.shortcuts import render, get_object_or_404,redirect
-
-from .models import vehiculo,Producto,Marcas,combustible,referencia,tipo,Cliente,Pedido,PedidoDetalle
+from django.http import Http404
+from .models import Vehiculo,Producto,Marcas,Combustible,Referencia,Tipo,Cliente,Pedido,PedidoDetalle
 
 from .carryto import Cart
 from django.contrib.auth.models import User
 from django.contrib.auth import login,logout,authenticate
 from django.contrib.auth.decorators import login_required
-# Create your views here.
 
 """ VISTAS PARA EL CATALOGO DE PRODUCTOS"""
 
+def filtrar_productos(request, termino:str, termino_id:int):
+    """
+    filtra productos en funcion del termino de busqueda
+    devuelve HttpResponse(status=404) si:
+    - el **termino** no esta dentro de **CLASES_PARA_TERMINOS_ACEPTADOS_DE_BUSQUEDA**
+    - el **termino_id** no corresponde al id de ninguna instancia de la clase buscada 
+    """
+
+    CLASES_PARA_TERMINOS_ACEPTADOS_DE_BUSQUEDA = {
+        "categoria": Vehiculo,
+        "marca": Marcas,
+        "combustible": Combustible,
+        "referencia": Referencia,
+        "tipo": Tipo,
+    }
+    
+    if termino not in CLASES_PARA_TERMINOS_ACEPTADOS_DE_BUSQUEDA:
+        raise Http404()
+
+    # obtenemos la clase que usaremos para filtrar los Productos
+    ClaseBusqueda = CLASES_PARA_TERMINOS_ACEPTADOS_DE_BUSQUEDA[termino]
+    instacia_clase_buscada = get_object_or_404(ClaseBusqueda, pk=termino_id)
+
+    context = {
+        "productos": instacia_clase_buscada.producto_set.all(),
+        "categorias": Vehiculo.objects.all(),
+        "marcas": Marcas.objects.all(),
+        "combustibles": Combustible.objects.all(),
+        "referencias": Referencia.objects.all(),
+        "tipos": Tipo.objects.all(),
+    }
+    return render(request, "index.html", context)
+
+
 def index(request):
     listaproductos = Producto.objects.all()    
-    listacategorias = vehiculo.objects.all()  
+    listacategorias = Vehiculo.objects.all()  
     listamarcas= Marcas.objects.all() 
-    listacombustible= combustible.objects.all() 
-    listareferencia= referencia.objects.all() 
-    listatipo= tipo.objects.all()
+    listacombustible= Combustible.objects.all() 
+    listareferencia= Referencia.objects.all() 
+    listatipo= Tipo.objects.all()
 
     contex = {
         'productos':listaproductos,
         'categorias':listacategorias,
         'marcas': listamarcas,
-        'combustible': listacombustible,
-        'referencia': listareferencia,
-        'tipo': listatipo
+        'combustibles': listacombustible,
+        'referencias': listareferencia,
+        'tipos': listatipo
     }
     
     return render(request,"index.html",contex)
 
-
+# esta funcion ya no es necesaria y puede eliminada 
 def productosporcategorias(request,categoria_id):
     """vista para filtrar productos por categoria """
-    objcategoria =vehiculo.objects.get(pk=categoria_id)
+    objcategoria =Vehiculo.objects.get(pk=categoria_id)
     listaproductos=objcategoria.producto_set.all()
-    listacategorias = vehiculo.objects.all()  
+    listacategorias = Vehiculo.objects.all()  
     listamarcas= Marcas.objects.all() 
-    listacombustible= combustible.objects.all() 
-    listareferencia= referencia.objects.all() 
-    listatipo= tipo.objects.all()
+    listacombustible= Combustible.objects.all() 
+    listareferencia= Referencia.objects.all() 
+    listatipo= Tipo.objects.all()
 
     context={
         'productos':listaproductos,
@@ -51,16 +84,17 @@ def productosporcategorias(request,categoria_id):
     }
     return render(request,"index.html",context)
 
+# esta funcion ya no es necesaria y puede eliminada 
 def productospormarcas(request,marcas_id):
     """vista para filtrar productos por categoria """
     objcategoria =Marcas.objects.get(pk=marcas_id)
     listaproductos=objcategoria.producto_set.all()
     
-    listacategorias = vehiculo.objects.all()  
+    listacategorias = Vehiculo.objects.all()  
     listamarcas= Marcas.objects.all() 
-    listacombustible= combustible.objects.all() 
-    listareferencia= referencia.objects.all() 
-    listatipo= tipo.objects.all()
+    listacombustible= Combustible.objects.all() 
+    listareferencia= Referencia.objects.all() 
+    listatipo= Tipo.objects.all()
 
     context={
         'productos':listaproductos,
@@ -73,16 +107,17 @@ def productospormarcas(request,marcas_id):
     }
     return render(request,"index.html",context)
 
+# esta funcion ya no es necesaria y puede eliminada 
 def productosporcombustible(request,combustible_id):
     """vista para filtrar productos por categoria """
-    objcategoria =combustible.objects.get(pk=combustible_id)
+    objcategoria =Combustible.objects.get(pk=combustible_id)
     listaproductos=objcategoria.producto_set.all()
 
-    listacategorias = vehiculo.objects.all()  
+    listacategorias = Vehiculo.objects.all()  
     listamarcas= Marcas.objects.all() 
-    listacombustible= combustible.objects.all() 
-    listareferencia= referencia.objects.all() 
-    listatipo= tipo.objects.all()
+    listacombustible= Combustible.objects.all() 
+    listareferencia= Referencia.objects.all() 
+    listatipo= Tipo.objects.all()
 
     context={
         'productos':listaproductos,
@@ -95,17 +130,17 @@ def productosporcombustible(request,combustible_id):
     }
     return render(request,"index.html",context)
 
-
+# esta funcion ya no es necesaria y puede eliminada 
 def productosporreferencia(request,referencia_id):
     """vista para filtrar productos por categoria """
-    objcategoria =referencia.objects.get(pk=referencia_id)
+    objcategoria =Referencia.objects.get(pk=referencia_id)
     listaproductos=objcategoria.producto_set.all()
 
-    listacategorias = vehiculo.objects.all()  
+    listacategorias = Vehiculo.objects.all()  
     listamarcas= Marcas.objects.all() 
-    listacombustible= combustible.objects.all() 
-    listareferencia= referencia.objects.all() 
-    listatipo= tipo.objects.all()
+    listacombustible= Combustible.objects.all() 
+    listareferencia= Referencia.objects.all() 
+    listatipo= Tipo.objects.all()
 
     context={
         'productos':listaproductos,
@@ -118,17 +153,17 @@ def productosporreferencia(request,referencia_id):
     }
     return render(request,"index.html",context)
 
-
+# esta funcion ya no es necesaria y puede eliminada 
 def productosportipo(request,tipo_id):
     """vista para filtrar productos por categoria """
-    objcategoria =tipo.objects.get(pk=tipo_id)
+    objcategoria =Tipo.objects.get(pk=tipo_id)
     listaproductos=objcategoria.producto_set.all()
     
-    listacategorias = vehiculo.objects.all()  
+    listacategorias = Vehiculo.objects.all()  
     listamarcas= Marcas.objects.all() 
-    listacombustible= combustible.objects.all() 
-    listareferencia= referencia.objects.all() 
-    listatipo= tipo.objects.all()
+    listacombustible= Combustible.objects.all() 
+    listareferencia= Referencia.objects.all() 
+    listatipo= Tipo.objects.all()
 
     context={
         'productos':listaproductos,
@@ -147,14 +182,14 @@ def productospornombre(request):
     nombre=request.POST['nombre']
     listaproductos=Producto.objects.filter(nombre__icontains=nombre)
     
-    listacategorias = vehiculo.objects.all()  
+    listacategorias = Vehiculo.objects.all()  
 
     
-    listacategorias = vehiculo.objects.all()  
+    listacategorias = Vehiculo.objects.all()  
     listamarcas= Marcas.objects.all() 
-    listacombustible= combustible.objects.all() 
-    listareferencia= referencia.objects.all() 
-    listatipo= tipo.objects.all()
+    listacombustible= Combustible.objects.all() 
+    listareferencia= Referencia.objects.all() 
+    listatipo= Tipo.objects.all()
 
     context = {
         'productos':listaproductos,
